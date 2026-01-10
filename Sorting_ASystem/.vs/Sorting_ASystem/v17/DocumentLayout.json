@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,28 +30,28 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "sort_system.h",
+              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_system.h",
+              "RelativeDocumentMoniker": "sort_system.h",
+              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_system.h*",
+              "RelativeToolTip": "sort_system.h*",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABgAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-01-10T02:35:43.884Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "sort_algos.c",
               "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c",
               "RelativeDocumentMoniker": "sort_algos.c",
               "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c",
               "RelativeToolTip": "sort_algos.c",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAOQAAAAAAAAAAAAAAPgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2026-01-10T02:35:47.864Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "sort_system.h",
-              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_system.h",
-              "RelativeDocumentMoniker": "sort_system.h",
-              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_system.h",
-              "RelativeToolTip": "sort_system.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAADwvwsAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-10T02:35:43.884Z",
               "EditorCaption": ""
             },
             {
