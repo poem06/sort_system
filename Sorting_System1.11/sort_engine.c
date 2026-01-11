@@ -8,6 +8,49 @@ static long long g_comparisons = 0;
 static long long g_moves = 0;
 static LARGE_INTEGER g_cpuFreq;
 
+// 0. 基础数据结构：
+typedef struct {
+    int low;
+    int high;
+} StackNode;
+
+typedef struct {
+    StackNode* data;
+    int top;
+    int capacity;
+} SeqStack;
+
+void initStack(SeqStack* s, int capacity) {
+    s->data = (StackNode*)malloc(capacity * sizeof(StackNode));
+    s->top = -1;
+    s->capacity = capacity;
+}
+
+int isStackEmpty(SeqStack* s) {
+    return s->top == -1;
+}
+
+void push(SeqStack* s, int low, int high) {
+    if (s->top < s->capacity - 1) {
+        s->top++;
+        s->data[s->top].low = low;
+        s->data[s->top].high = high;
+    }
+}
+
+void pop(SeqStack* s, int* low, int* high) {
+    if (s->top >= 0) {
+        *low = s->data[s->top].low;
+        *high = s->data[s->top].high;
+        s->top--;
+    }
+}
+
+void freeStack(SeqStack* s) {
+    if (s->data) free(s->data);
+}
+
+// 辅助函数
 void reset_stats() {
     g_comparisons = 0;
     g_moves = 0;
@@ -20,12 +63,14 @@ void swap(int* a, int* b) {
     g_moves += 3;
 }
 
+int min_val(int x, int y) {
+    return x < y ? x : y;
+}
+
 // 通用执行器
 SortPerformance run_sort(void (*func)(int*, int), int* arr, int n, char* name) {
     SortPerformance sp;
-    // 初始化结构体，防止垃圾值
     memset(&sp, 0, sizeof(SortPerformance));
-
     strncpy_s(sp.algorithm, 30, name, _TRUNCATE);
     sp.dataSize = n;
 
@@ -34,27 +79,21 @@ SortPerformance run_sort(void (*func)(int*, int), int* arr, int n, char* name) {
 
     LARGE_INTEGER start, end;
     QueryPerformanceCounter(&start);
-    func(arr, n); // 执行排序
+    func(arr, n);
     QueryPerformanceCounter(&end);
 
     sp.compareCount = g_comparisons;
     sp.moveCount = g_moves;
-    // 转换为毫秒(ms)
     sp.timeCost = (double)(end.QuadPart - start.QuadPart) * 1000.0 / g_cpuFreq.QuadPart;
 
     return sp;
 }
 
 // 数据生成
-// type: 0=随机, 1=正序, 2=逆序
 EXPORT void generate_data_c(int* arr, int n, int type) {
     srand((unsigned)GetTickCount64());
-    for (int i = 0; i < n; i++) {
-        arr[i] = rand() % 10000; // 随机
-    }
-
+    for (int i = 0; i < n; i++) arr[i] = rand() % 10000;
     if (type == 1) { // 正序
-        // 简单冒泡排成正序
         for (int i = 0; i < n - 1; i++)
             for (int j = 0; j < n - 1 - i; j++)
                 if (arr[j] > arr[j + 1]) { int t = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = t; }
@@ -66,7 +105,9 @@ EXPORT void generate_data_c(int* arr, int n, int type) {
     }
 }
 
-// 1. 冒泡
+// 算法实现
+
+// 1. 冒泡排序
 void _BubbleSort(int arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - 1 - i; j++) {
@@ -76,7 +117,7 @@ void _BubbleSort(int arr[], int n) {
     }
 }
 
-// 2. 插入
+// 2. 插入排序
 void _InsertSort(int arr[], int n) {
     for (int i = 1; i < n; i++) {
         int temp = arr[i]; g_moves++;
@@ -93,7 +134,7 @@ void _InsertSort(int arr[], int n) {
     }
 }
 
-// 3. 选择
+// 3. 选择排序
 void _SelectSort(int arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         int minIdx = i;
@@ -105,7 +146,7 @@ void _SelectSort(int arr[], int n) {
     }
 }
 
-// 4. 希尔
+// 4. 希尔排序
 void _ShellSort(int arr[], int n) {
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i++) {
@@ -125,7 +166,7 @@ void _ShellSort(int arr[], int n) {
 }
 
 // 5. 堆排序
-void _HeapAdjust(int arr[], int n, int i) {
+void _HeapAdjustIterative(int arr[], int n, int i) {
     int temp = arr[i]; g_moves++;
     int k = 2 * i + 1;
     while (k < n) {
@@ -144,14 +185,14 @@ void _HeapAdjust(int arr[], int n, int i) {
     arr[i] = temp; g_moves++;
 }
 void _HeapSort(int arr[], int n) {
-    for (int i = n / 2 - 1; i >= 0; i--) _HeapAdjust(arr, n, i);
+    for (int i = n / 2 - 1; i >= 0; i--) _HeapAdjustIterative(arr, n, i);
     for (int i = n - 1; i > 0; i--) {
         swap(&arr[0], &arr[i]);
-        _HeapAdjust(arr, i, 0);
+        _HeapAdjustIterative(arr, i, 0);
     }
 }
 
-// 6. 归并
+// 6. 归并排序
 void _Merge(int arr[], int l, int m, int r, int temp[]) {
     int i = l, j = m + 1, k = l;
     while (i <= m && j <= r) {
@@ -163,20 +204,18 @@ void _Merge(int arr[], int l, int m, int r, int temp[]) {
     while (j <= r) { temp[k++] = arr[j++]; g_moves++; }
     for (i = l; i <= r; i++) { arr[i] = temp[i]; g_moves++; }
 }
-void _MergeSortRecursive(int arr[], int l, int r, int temp[]) {
-    if (l < r) {
-        int m = l + (r - l) / 2;
-        _MergeSortRecursive(arr, l, m, temp);
-        _MergeSortRecursive(arr, m + 1, r, temp);
-        _Merge(arr, l, m, r, temp);
-    }
-}
-void _MergeSort(int arr[], int n) {
+void _MergeSortIterative(int arr[], int n) {
     int* temp = (int*)malloc(n * sizeof(int));
-    if (temp) {
-        _MergeSortRecursive(arr, 0, n - 1, temp);
-        free(temp);
+    if (!temp) return;
+
+    for (int curr_size = 1; curr_size <= n - 1; curr_size = 2 * curr_size) {
+        for (int left_start = 0; left_start < n - 1; left_start += 2 * curr_size) {
+            int mid = min_val(left_start + curr_size - 1, n - 1);
+            int right_end = min_val(left_start + 2 * curr_size - 1, n - 1);
+            _Merge(arr, left_start, mid, right_end, temp);
+        }
     }
+    free(temp);
 }
 
 // 7. 快速排序
@@ -193,22 +232,30 @@ int _Partition(int arr[], int low, int high) {
     swap(&arr[i + 1], &arr[high]);
     return i + 1;
 }
-void _QuickSortRecursive(int arr[], int low, int high) {
-    if (low < high) {
-        int pi = _Partition(arr, low, high);
-        _QuickSortRecursive(arr, low, pi - 1);
-        _QuickSortRecursive(arr, pi + 1, high);
+void _QuickSortIterative(int arr[], int n) {
+    if (n <= 1) return;
+
+    SeqStack stack;
+    initStack(&stack, n); // 初始化栈
+    push(&stack, 0, n - 1); // 压入初始区间
+
+    while (!isStackEmpty(&stack)) {
+        int low, high;
+        pop(&stack, &low, &high);
+
+        int pivot = _Partition(arr, low, high);
+
+        if (pivot + 1 < high) push(&stack, pivot + 1, high);
+        if (low < pivot - 1) push(&stack, low, pivot - 1);
     }
-}
-void _QuickSort(int arr[], int n) {
-    _QuickSortRecursive(arr, 0, n - 1);
+    freeStack(&stack);
 }
 
-// --- 导出实现 ---
+// 导出
 EXPORT SortPerformance bubble_sort(int* arr, int n) { return run_sort(_BubbleSort, arr, n, "Bubble Sort"); }
 EXPORT SortPerformance insertion_sort(int* arr, int n) { return run_sort(_InsertSort, arr, n, "Insertion Sort"); }
 EXPORT SortPerformance selection_sort(int* arr, int n) { return run_sort(_SelectSort, arr, n, "Selection Sort"); }
 EXPORT SortPerformance shell_sort(int* arr, int n) { return run_sort(_ShellSort, arr, n, "Shell Sort"); }
-EXPORT SortPerformance quick_sort(int* arr, int n) { return run_sort(_QuickSort, arr, n, "Quick Sort"); }
-EXPORT SortPerformance merge_sort(int* arr, int n) { return run_sort(_MergeSort, arr, n, "Merge Sort"); }
+EXPORT SortPerformance quick_sort(int* arr, int n) { return run_sort(_QuickSortIterative, arr, n, "Quick Sort"); }
+EXPORT SortPerformance merge_sort(int* arr, int n) { return run_sort(_MergeSortIterative, arr, n, "Merge Sort"); }
 EXPORT SortPerformance heap_sort(int* arr, int n) { return run_sort(_HeapSort, arr, n, "Heap Sort"); }
