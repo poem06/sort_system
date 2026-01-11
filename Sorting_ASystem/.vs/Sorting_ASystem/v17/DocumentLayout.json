@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{71117241-B2FD-4F2B-8E5C-B2E77804E794}|Sorting_ASystem.vcxproj|D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\test2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{71117241-B2FD-4F2B-8E5C-B2E77804E794}|Sorting_ASystem.vcxproj|solutionrelative:test2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{71117241-B2FD-4F2B-8E5C-B2E77804E794}|Sorting_ASystem.vcxproj|D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{71117241-B2FD-4F2B-8E5C-B2E77804E794}|Sorting_ASystem.vcxproj|solutionrelative:sort_algos.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,7 +34,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "test2.c",
+              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\test2.c",
+              "RelativeDocumentMoniker": "test2.c",
+              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\test2.c",
+              "RelativeToolTip": "test2.c",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAAACIBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-01-10T09:47:23.202Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "sort_algos.c",
+              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c",
+              "RelativeDocumentMoniker": "sort_algos.c",
+              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c*",
+              "RelativeToolTip": "sort_algos.c*",
+              "ViewState": "AgIAANsAAAAAAAAAAAAgwBwBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-01-10T02:35:47.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "sort_system.h",
               "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_system.h",
               "RelativeDocumentMoniker": "sort_system.h",
@@ -38,21 +68,7 @@
               "RelativeToolTip": "sort_system.h",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAACEAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-10T02:35:43.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "sort_algos.c",
-              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c",
-              "RelativeDocumentMoniker": "sort_algos.c",
-              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_ASystem\\sort_algos.c",
-              "RelativeToolTip": "sort_algos.c",
-              "ViewState": "AgIAAOQAAAAAAAAAAAAAAPgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2026-01-10T02:35:47.864Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-10T02:35:43.884Z"
             },
             {
               "$type": "Bookmark",

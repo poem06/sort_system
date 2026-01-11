@@ -1,0 +1,8 @@
+BatchTime,DataType,Algorithm,DataSize,Comparisons,Moves,Time(s)
+2026-01-11 08:46:01,Random,Bubble,10,45,36,0.00000060
+2026-01-11 08:46:01,Random,Insert,10,21,30,0.00000030
+2026-01-11 08:46:01,Random,Select,10,45,18,0.00000050
+2026-01-11 08:46:01,Random,Quick(Stack),10,43,30,0.00000140
+2026-01-11 08:46:01,Random,Shell,10,31,53,0.00000030
+2026-01-11 08:46:01,Random,Heap(Iter),10,42,72,0.00000060
+2026-01-11 08:46:01,Random,Merge(Iter),10,21,80,0.00000100
