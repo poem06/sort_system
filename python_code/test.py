@@ -9,11 +9,18 @@ import datetime
 # ==========================================
 # 0. 配置与常量
 # ==========================================
-COLORS = {
-    "default": "#4a90e2",  # 蓝色
-    "compare": "#f5a623",  # 黄色
-    "active": "#d0021b",  # 红色
-    "sorted": "#7ed321"  # 绿色
+COLORS_MAP = {
+    "默认状态": "#4a90e2",  # 蓝色
+    "正在比较": "#f5a623",  # 黄色
+    "交换/移动": "#d0021b",  # 红色
+    "已归位": "#7ed321"  # 绿色
+}
+
+COLOR_KEYS = {
+    "default": COLORS_MAP["默认状态"],
+    "compare": COLORS_MAP["正在比较"],
+    "active": COLORS_MAP["交换/移动"],
+    "sorted": COLORS_MAP["已归位"]
 }
 
 ALGO_INFO = {
@@ -31,10 +38,10 @@ ALGO_INFO = {
 
 
 # ==========================================
-# 1. C语言 DLL 接口 (关键修复)
+# 1. C语言 DLL 接口
 # ==========================================
 class SortPerformance(ctypes.Structure):
-    _pack_ = 1  # 【核心修复】强制1字节对齐，必须与C语言头文件一致！
+    _pack_ = 1  # 强制对齐
     _fields_ = [
         ("algorithm", ctypes.c_char * 30),
         ("dataSize", ctypes.c_int),
@@ -50,7 +57,6 @@ class C_Backend:
             dll_path = os.path.join(os.path.dirname(__file__), "Sorting_System1.11.dll")
             self.lib = ctypes.CDLL(dll_path)
 
-            # 注册函数
             for name in ["bubble_sort", "insertion_sort", "selection_sort",
                          "shell_sort", "quick_sort", "merge_sort", "heap_sort"]:
                 if hasattr(self.lib, name):
@@ -91,7 +97,7 @@ class C_Backend:
 
 
 # ==========================================
-# 2. 逻辑层：快照生成器 (已添加具体数值显示)
+# 2. 逻辑层：快照生成器
 # ==========================================
 class Snapshot:
     def __init__(self, data, colors, text, sorted_idxs):
@@ -110,20 +116,19 @@ class SortLogic:
 
         def add_frame(colors, msg):
             frame_colors = {}
-            for i in sorted_indices: frame_colors[i] = COLORS["sorted"]
+            for i in sorted_indices: frame_colors[i] = COLOR_KEYS["sorted"]
             frame_colors.update(colors)
             history.append(Snapshot(data, frame_colors, msg, sorted_indices))
 
-        # --- 算法实现 ---
         if algo_name == "冒泡排序":
             for i in range(n - 1):
                 swapped = False
                 for j in range(n - 1 - i):
                     val_a, val_b = data[j], data[j + 1]
-                    add_frame({j: COLORS["compare"], j + 1: COLORS["compare"]}, f"比较: {val_a} > {val_b} ?")
+                    add_frame({j: COLOR_KEYS["compare"], j + 1: COLOR_KEYS["compare"]}, f"比较: {val_a} > {val_b} ?")
                     if val_a > val_b:
                         data[j], data[j + 1] = data[j + 1], data[j]
-                        add_frame({j: COLORS["active"], j + 1: COLORS["active"]}, f"交换: {val_a} 与 {val_b}")
+                        add_frame({j: COLOR_KEYS["active"], j + 1: COLOR_KEYS["active"]}, f"交换: {val_a} 与 {val_b}")
                         swapped = True
                 sorted_indices.add(n - 1 - i)
                 add_frame({}, f"第 {i + 1} 轮结束，{data[n - 1 - i]} 已归位")
@@ -134,31 +139,33 @@ class SortLogic:
             for i in range(1, n):
                 key = data[i]
                 j = i - 1
-                add_frame({i: COLORS["active"]}, f"取出待插入元素: {key}")
+                add_frame({i: COLOR_KEYS["active"]}, f"取出待插入元素: {key}")
                 while j >= 0:
-                    add_frame({j: COLORS["compare"], j + 1: COLORS["active"]}, f"比较: {data[j]} > {key} ?")
+                    add_frame({j: COLOR_KEYS["compare"], j + 1: COLOR_KEYS["active"]}, f"比较: {data[j]} > {key} ?")
                     if data[j] > key:
                         data[j + 1] = data[j]
-                        add_frame({j + 1: COLORS["active"]}, f"后移元素 {data[j + 1]}")
+                        add_frame({j + 1: COLOR_KEYS["active"]}, f"后移元素 {data[j + 1]}")
                         j -= 1
                     else:
                         break
                 data[j + 1] = key
-                add_frame({j + 1: COLORS["active"]}, f"插入 {key} 到索引 {j + 1}")
+                add_frame({j + 1: COLOR_KEYS["active"]}, f"插入 {key} 到索引 {j + 1}")
             sorted_indices.update(range(n))
 
         elif algo_name == "选择排序":
             for i in range(n - 1):
                 min_idx = i
-                add_frame({i: COLORS["active"]}, f"当前位置 {i}，假设最小值为 {data[i]}")
+                add_frame({i: COLOR_KEYS["active"]}, f"当前位置 {i}，假设最小值为 {data[i]}")
                 for j in range(i + 1, n):
-                    add_frame({j: COLORS["compare"], min_idx: COLORS["active"]}, f"比较: {data[j]} < {data[min_idx]} ?")
+                    add_frame({j: COLOR_KEYS["compare"], min_idx: COLOR_KEYS["active"]},
+                              f"比较: {data[j]} < {data[min_idx]} ?")
                     if data[j] < data[min_idx]:
                         min_idx = j
-                        add_frame({min_idx: COLORS["active"]}, f"发现新最小值: {data[min_idx]}")
+                        add_frame({min_idx: COLOR_KEYS["active"]}, f"发现新最小值: {data[min_idx]}")
                 if min_idx != i:
                     data[i], data[min_idx] = data[min_idx], data[i]
-                    add_frame({i: COLORS["active"], min_idx: COLORS["active"]}, f"交换 {data[i]} 与 {data[min_idx]}")
+                    add_frame({i: COLOR_KEYS["active"], min_idx: COLOR_KEYS["active"]},
+                              f"交换 {data[i]} 与 {data[min_idx]}")
                 sorted_indices.add(i)
             sorted_indices.update(range(n))
 
@@ -169,9 +176,9 @@ class SortLogic:
                 for i in range(gap, n):
                     temp = data[i]
                     j = i
-                    add_frame({i: COLORS["active"]}, f"分组取出: {temp}")
+                    add_frame({i: COLOR_KEYS["active"]}, f"分组取出: {temp}")
                     while j >= gap:
-                        add_frame({j - gap: COLORS["compare"], j: COLORS["active"]},
+                        add_frame({j - gap: COLOR_KEYS["compare"], j: COLOR_KEYS["active"]},
                                   f"比较: {data[j - gap]} > {temp} ?")
                         if data[j - gap] > temp:
                             data[j] = data[j - gap]
@@ -179,7 +186,7 @@ class SortLogic:
                         else:
                             break
                     data[j] = temp
-                    add_frame({j: COLORS["active"]}, f"插入 {temp}")
+                    add_frame({j: COLOR_KEYS["active"]}, f"插入 {temp}")
                 gap //= 2
             sorted_indices.update(range(n))
 
@@ -188,15 +195,17 @@ class SortLogic:
                 if low < high:
                     pivot = data[high]
                     i = low - 1
-                    add_frame({high: COLORS["active"]}, f"基准值(Pivot): {pivot}")
+                    add_frame({high: COLOR_KEYS["active"]}, f"基准值(Pivot): {pivot}")
                     for j in range(low, high):
-                        add_frame({j: COLORS["compare"], high: COLORS["active"]}, f"比较: {data[j]} < {pivot} ?")
+                        add_frame({j: COLOR_KEYS["compare"], high: COLOR_KEYS["active"]},
+                                  f"比较: {data[j]} < {pivot} ?")
                         if data[j] < pivot:
                             i += 1
                             data[i], data[j] = data[j], data[i]
-                            add_frame({i: COLORS["active"], j: COLORS["active"]}, f"交换 {data[i]} 与 {data[j]}")
+                            add_frame({i: COLOR_KEYS["active"], j: COLOR_KEYS["active"]},
+                                      f"交换 {data[i]} 与 {data[j]}")
                     data[i + 1], data[high] = data[high], data[i + 1]
-                    add_frame({i + 1: COLORS["sorted"]}, f"基准 {pivot} 归位")
+                    add_frame({i + 1: COLOR_KEYS["sorted"]}, f"基准 {pivot} 归位")
                     pi = i + 1
                     sorted_indices.add(pi)
                     quick(low, pi - 1)
@@ -214,12 +223,13 @@ class SortLogic:
                     merge_sort_rec(l, m)
                     merge_sort_rec(m + 1, r)
 
-                    # 可视化逻辑
                     temp = []
                     i, j = l, m + 1
-                    add_frame({l: COLORS["active"], r: COLORS["active"]}, f"准备合并区间 [{l}-{m}] 和 [{m + 1}-{r}]")
+                    add_frame({l: COLOR_KEYS["active"], r: COLOR_KEYS["active"]},
+                              f"准备合并区间 [{l}-{m}] 和 [{m + 1}-{r}]")
                     while i <= m and j <= r:
-                        add_frame({i: COLORS["compare"], j: COLORS["compare"]}, f"比较左({data[i]}) <= 右({data[j]}) ?")
+                        add_frame({i: COLOR_KEYS["compare"], j: COLOR_KEYS["compare"]},
+                                  f"比较左({data[i]}) <= 右({data[j]}) ?")
                         if data[i] <= data[j]:
                             temp.append(data[i]);
                             i += 1
@@ -231,7 +241,7 @@ class SortLogic:
 
                     for k, val in enumerate(temp):
                         data[l + k] = val
-                        add_frame({l + k: COLORS["active"]}, f"回填值 {val}")
+                        add_frame({l + k: COLOR_KEYS["active"]}, f"回填值 {val}")
 
             merge_sort_rec(0, n - 1)
             sorted_indices.update(range(n))
@@ -242,16 +252,16 @@ class SortLogic:
                 l = 2 * i + 1
                 r = 2 * i + 2
                 if l < n:
-                    add_frame({l: COLORS["compare"], largest: COLORS["active"]},
+                    add_frame({l: COLOR_KEYS["compare"], largest: COLOR_KEYS["active"]},
                               f"比较左子 {data[l]} > 父 {data[largest]} ?")
                     if data[l] > data[largest]: largest = l
                 if r < n:
-                    add_frame({r: COLORS["compare"], largest: COLORS["active"]},
+                    add_frame({r: COLOR_KEYS["compare"], largest: COLOR_KEYS["active"]},
                               f"比较右子 {data[r]} > 父 {data[largest]} ?")
                     if data[r] > data[largest]: largest = r
                 if largest != i:
                     data[i], data[largest] = data[largest], data[i]
-                    add_frame({i: COLORS["active"], largest: COLORS["active"]}, "交换父子节点")
+                    add_frame({i: COLOR_KEYS["active"], largest: COLOR_KEYS["active"]}, "交换父子节点")
                     heapify(n, largest)
 
             add_frame({}, "开始构建大顶堆")
@@ -259,7 +269,7 @@ class SortLogic:
             add_frame({}, "建堆完成")
             for i in range(n - 1, 0, -1):
                 data[i], data[0] = data[0], data[i]
-                add_frame({i: COLORS["sorted"], 0: COLORS["active"]}, f"最大值 {data[i]} 移到末尾")
+                add_frame({i: COLOR_KEYS["sorted"], 0: COLOR_KEYS["active"]}, f"最大值 {data[i]} 移到末尾")
                 sorted_indices.add(i)
                 heapify(i, 0)
             sorted_indices.add(0)
@@ -282,6 +292,10 @@ class VisualSortApp:
         self.style.theme_use('clam')
         self.style.configure("Horizontal.TProgressbar", background="#007acc", troughcolor="#333", bordercolor="#333",
                              lightcolor="#333", darkcolor="#333")
+
+        self.style.configure("Treeview", background="#333", fieldbackground="#333", foreground="white", rowheight=25)
+        self.style.configure("Treeview.Heading", background="#444", foreground="white", font=('Arial', 10, 'bold'))
+        self.style.map("Treeview", background=[('selected', '#007acc')])
 
         self.backend = C_Backend()
         self.logic = SortLogic()
@@ -336,21 +350,19 @@ class VisualSortApp:
         tk.Frame(right, bg="#555", height=1).pack(fill=tk.X, pady=20, padx=10)
 
         tk.Label(right, text="颜色图例", bg="#333", fg="white", font=("bold", 12)).pack(pady=5)
-        for k, v in COLORS.items():
+        for k, v in COLORS_MAP.items():
             f = tk.Frame(right, bg="#333")
             f.pack(anchor="w", padx=20, pady=2)
             tk.Label(f, bg=v, width=2).pack(side=tk.LEFT)
             tk.Label(f, text=k, bg="#333", fg="#ccc", padx=10).pack(side=tk.LEFT)
 
-        # 3. 底部 (布局修复)
+        # 3. 底部
         btm = tk.Frame(self.root, bg="#333", height=160)
         btm.pack(fill=tk.X, side=tk.BOTTOM)
 
-        # 进度条
         self.progress = ttk.Progressbar(btm, style="Horizontal.TProgressbar", orient="horizontal", mode="determinate")
         self.progress.pack(fill=tk.X, padx=0, pady=0)
 
-        # 状态区
         status_frame = tk.Frame(btm, bg="#252526", height=50)
         status_frame.pack(fill=tk.X, pady=(0, 5))
         self.lbl_desc_main = tk.Label(status_frame, text="Ready", bg="#252526", fg="#ffffff",
@@ -360,11 +372,10 @@ class VisualSortApp:
                                          font=("Consolas", 10))
         self.lbl_step_counter.pack(pady=(0, 5))
 
-        # 控制区 (使用 place 居中)
         ctrl = tk.Frame(btm, bg="#333")
         ctrl.pack(fill=tk.BOTH, expand=True, padx=20, pady=5)
 
-        # --- 左侧模块 ---
+        # 左侧
         left_box = tk.Frame(ctrl, bg="#333")
         left_box.pack(side=tk.LEFT)
         tk.Button(left_box, text="随机", command=lambda: self.generate_data(0), bg="#555", fg="white", width=5).pack(
@@ -373,7 +384,6 @@ class VisualSortApp:
             side=tk.LEFT, padx=2)
         tk.Button(left_box, text="逆序", command=lambda: self.generate_data(2), bg="#555", fg="white", width=5).pack(
             side=tk.LEFT, padx=2)
-
         tk.Label(left_box, text="  数据量:", bg="#333", fg="white").pack(side=tk.LEFT)
         self.lbl_n_val = tk.Label(left_box, text="50", bg="#333", fg="cyan", width=3)
         self.lbl_n_val.pack(side=tk.LEFT)
@@ -382,22 +392,29 @@ class VisualSortApp:
         self.scale_n.set(50)
         self.scale_n.pack(side=tk.LEFT)
 
-        # --- 右侧模块 ---
+        # 右侧模块 (倒序排列以实现: 延时-数值-滑块-按钮 从左到右)
         right_box = tk.Frame(ctrl, bg="#333")
         right_box.pack(side=tk.RIGHT)
+
+        # 1. 最右：按钮
         tk.Button(right_box, text="⚡ 单项测速", command=self.run_benchmark, bg="orange", fg="black").pack(side=tk.RIGHT)
+
+        # 2. 滑块 (padding右侧隔开按钮)
         self.scale_spd = tk.Scale(right_box, from_=200, to=10, orient=tk.HORIZONTAL, bg="#333", fg="white", showvalue=0,
                                   length=80, command=self.on_scale_spd)
         self.scale_spd.set(50)
-        self.scale_spd.pack(side=tk.RIGHT)
+        self.scale_spd.pack(side=tk.RIGHT, padx=(5, 20))
+
+        # 3. 数值显示
         self.lbl_spd_val = tk.Label(right_box, text="50ms", bg="#333", fg="cyan", width=5)
         self.lbl_spd_val.pack(side=tk.RIGHT)
+
+        # 4. 标签 (最左)
         tk.Label(right_box, text="延时:", bg="#333", fg="white").pack(side=tk.RIGHT)
 
-        # --- 中间模块 (绝对居中) ---
+        # 中间 (绝对居中)
         center_box = tk.Frame(ctrl, bg="#333")
         center_box.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-
         tk.Button(center_box, text="⏮", command=self.reset).pack(side=tk.LEFT, padx=2)
         tk.Button(center_box, text="◀", command=self.prev).pack(side=tk.LEFT, padx=2)
         self.btn_play = tk.Button(center_box, text="▶", command=self.toggle, bg="#007acc", fg="white", width=5)
@@ -434,12 +451,21 @@ class VisualSortApp:
         self.comparison_results = []
         top = tk.Toplevel(self.root)
         top.title(f"全算法对比 - 数据类型: {self.current_data_type}")
-        top.geometry("700x450")
+        top.geometry("800x500")
+
+        frame = tk.Frame(top)
+        frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         cols = ("算法", "耗时(ms)", "比较次数", "移动次数")
-        tree = ttk.Treeview(top, columns=cols, show="headings")
-        for col in cols: tree.heading(col, text=col)
-        tree.pack(fill=tk.BOTH, expand=True)
+        tree = ttk.Treeview(frame, columns=cols, show="headings")
+        for col in cols:
+            tree.heading(col, text=col, anchor="center")
+            tree.column(col, anchor="center", width=150)
+
+        tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=tree.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        tree.configure(yscrollcommand=scrollbar.set)
 
         for algo_name in ALGO_INFO.keys():
             res = self.backend.run_sort(algo_name, self.data)
@@ -449,7 +475,9 @@ class VisualSortApp:
                 tree.insert("", tk.END, values=(
                     algo_name, f"{stats.timeCost:.6f}", stats.compareCount, stats.moveCount
                 ))
-        tk.Button(top, text="导出此表格", command=self.export_report).pack(pady=10)
+
+        tk.Button(top, text="导出此表格", command=self.export_report, height=2, bg="#e0aa00").pack(pady=10, fill=tk.X,
+                                                                                                   padx=20)
 
     def export_report(self):
         if not self.comparison_results:
@@ -542,7 +570,7 @@ class VisualSortApp:
             y0 = h - (val / max_val * (h - 20))
             x1 = x0 + bar_w - 1
             y1 = h
-            color = snap.colors.get(i, COLORS["default"])
+            color = snap.colors.get(i, COLOR_KEYS["default"])
             self.canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="")
 
     def toggle(self):
