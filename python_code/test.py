@@ -6,9 +6,7 @@ import random
 import csv
 import datetime
 
-# ==========================================
-# 0. 配置与常量
-# ==========================================
+# 0. 基本配置
 COLORS_MAP = {
     "默认状态": "#4a90e2",  # 蓝色
     "正在比较": "#f5a623",  # 黄色
@@ -37,11 +35,9 @@ ALGO_INFO = {
 }
 
 
-# ==========================================
 # 1. C语言 DLL 接口
-# ==========================================
 class SortPerformance(ctypes.Structure):
-    _pack_ = 1  # 强制对齐
+    _pack_ = 1
     _fields_ = [
         ("algorithm", ctypes.c_char * 30),
         ("dataSize", ctypes.c_int),
@@ -96,9 +92,7 @@ class C_Backend:
         return stats, list(c_arr)
 
 
-# ==========================================
 # 2. 逻辑层：快照生成器
-# ==========================================
 class Snapshot:
     def __init__(self, data, colors, text, sorted_idxs):
         self.data = list(data)
@@ -278,13 +272,11 @@ class SortLogic:
         return history
 
 
-# ==========================================
 # 3. GUI 层
-# ==========================================
 class VisualSortApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("排序算法可视化系统 Final Polished")
+        self.root.title("排序算法可视化系统")
         self.root.geometry("1300x850")
         self.root.configure(bg="#2b2b2b")
 
@@ -409,10 +401,10 @@ class VisualSortApp:
         self.lbl_spd_val = tk.Label(right_box, text="50ms", bg="#333", fg="cyan", width=5)
         self.lbl_spd_val.pack(side=tk.RIGHT)
 
-        # 4. 标签 (最左)
+        # 4. 标签
         tk.Label(right_box, text="延时:", bg="#333", fg="white").pack(side=tk.RIGHT)
 
-        # 中间 (绝对居中)
+        # 中间
         center_box = tk.Frame(ctrl, bg="#333")
         center_box.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         tk.Button(center_box, text="⏮", command=self.reset).pack(side=tk.LEFT, padx=2)
