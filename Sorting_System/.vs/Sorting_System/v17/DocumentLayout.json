@@ -1,0 +1,83 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{85CDEE39-1966-4F6A-9195-8622638D7BE1}|Sorting_System.vcxproj|D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{85CDEE39-1966-4F6A-9195-8622638D7BE1}|Sorting_System.vcxproj|solutionrelative:main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{85CDEE39-1966-4F6A-9195-8622638D7BE1}|Sorting_System.vcxproj|D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\head.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{85CDEE39-1966-4F6A-9195-8622638D7BE1}|Sorting_System.vcxproj|solutionrelative:head.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{85CDEE39-1966-4F6A-9195-8622638D7BE1}|Sorting_System.vcxproj|D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\logic.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{85CDEE39-1966-4F6A-9195-8622638D7BE1}|Sorting_System.vcxproj|solutionrelative:logic.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "head.h",
+              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\head.h",
+              "RelativeDocumentMoniker": "head.h",
+              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\head.h",
+              "RelativeToolTip": "head.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-01-12T07:34:41.623Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.c",
+              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\main.c",
+              "RelativeDocumentMoniker": "main.c",
+              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\main.c",
+              "RelativeToolTip": "main.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxAAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-01-12T07:34:40.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "logic.c",
+              "DocumentMoniker": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\logic.c",
+              "RelativeDocumentMoniker": "logic.c",
+              "ToolTip": "D:\\25578\\Desktop\\File\\Code\\sort_system\\Sorting_System\\logic.c",
+              "RelativeToolTip": "logic.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2026-01-12T07:34:37.475Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
